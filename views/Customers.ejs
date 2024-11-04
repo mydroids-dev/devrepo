@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            background: #343a40;
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #ddd;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #495057;
+            color: #ffffff;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            background: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .modal-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2 class="text-center">Royal Infra Market</h2>
+        <a href="/admin">Dashboard</a>
+    </div>
+
+    <div class="main-content">
+        <h1>Customer List</h1>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Mobile Number</th>
+                    <th>Send</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <% customers.forEach(customer => { %>
+                <tr>
+                    <td><%= customer.customerId %></td>
+                    <td><%= customer.customerName %></td>
+                    <td><%= customer.mobile %></td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#smsModal" data-customer-name="<%= customer.customerName %>" data-customer-mobile="<%= customer.mobile %>">
+                            Send
+                        </button>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for SMS Templates -->
+    <div class="modal fade" id="smsModal" tabindex="-1" role="dialog" aria-labelledby="smsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="smsModalLabel">Choose SMS Template</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        <li class="list-group-item template" data-template="Dear {{name}}, your investment return request has been initiated.">Return Request Initiated</li>
+                        <li class="list-group-item template" data-template="Dear {{name}}, we have processed your refund request. Expect it within 5-7 business days.">Refund Processing</li>
+                        <li class="list-group-item template" data-template="Dear {{name}}, the details you provided appear to be incorrect. Please verify your information.">Wrong Details</li>
+                        <li class="list-group-item template" data-template="Dear {{name}}, we apologize for the delay in processing your investment. We are working to resolve it.">Delay in Processing</li>
+                        <li class="list-group-item template" data-template="Dear {{name}}, your payment has been received successfully. Thank you for your investment.">Payment Confirmation</li>
+                        <li class="list-group-item template" data-template="Dear {{name}}, you have incurred a penalty due to wrong details/missing documents. Please correct them.">Penalty Notice</li>
+                        <li class="list-group-item" data-toggle="collapse" data-target="#customSms">Custom SMS</li>
+                        <div class="collapse" id="customSms">
+                            <textarea class="form-control" id="customMessage" rows="3" placeholder="Enter your custom message here..."></textarea>
+                        </div>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#smsModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var customerName = button.data('customer-name');
+            var customerMobile = button.data('customer-mobile');
+
+            var modal = $(this);
+            modal.find('.list-group-item.template').on('click', function() {
+                var template = $(this).data('template').replace("{{name}}", encodeURIComponent(customerName));
+                var finalMessage = template + " Regards, Royal Infra Market.";
+                var whatsappLink = "https://wa.me/+91" + customerMobile + "?text=" + encodeURIComponent(finalMessage);
+                
+                window.open(whatsappLink, '_blank');
+                modal.modal('hide');
+            });
+
+            modal.find('#customMessage').off('input').on('input', function() {
+                // Clear previous selections
+                modal.find('.list-group-item.template').removeClass('active');
+            });
+
+            modal.find('.modal-footer').off('click', 'button').on('click', '.btn-secondary', function () {
+                var customMessage = modal.find('#customMessage').val();
+                if (customMessage) {
+                    var finalCustomMessage = customMessage + " Regards, Royal Infra Market.";
+                    var whatsappLink = "https://wa.me/+91" + customerMobile + "?text=" + encodeURIComponent(finalCustomMessage);
+                    window.open(whatsappLink, '_blank');
+                    modal.modal('hide');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

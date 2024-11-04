@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login History</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1>Login History</h1>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>User ID</th>
+                <th>Associate ID</th>
+                <th>Login Time</th>
+                <th>IP Address</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% logins.forEach(record => { %>  <!-- Updated this line -->
+                <tr>
+                    <td><%= record.userId ? record.userId : '' %></td>  <!-- Assuming record.userId holds the user ID -->
+                    <td><%= record.associateId ? record.associateId : '' %></td>  <!-- Same for associateId -->
+                    <td><%= new Date(record.loginTime).toLocaleString() %></td> <!-- Changed timestamp to loginTime -->
+                    <td><%= record.ipAddress || 'N/A' %></td>  <!-- Added fallback for IP Address -->
+                    <td><%= record.location || "Unknown" %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

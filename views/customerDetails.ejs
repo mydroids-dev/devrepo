@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 28px;
+        }
+        h2 {
+            color: #007bff;
+            margin-top: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #007bff;
+            font-weight: 600;
+        }
+        td {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            transition: background-color 0.3s ease;
+            vertical-align: middle;
+        }
+        td:hover {
+            background-color: #f2f2f2;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"],
+        button {
+            padding: 12px;
+            margin-top: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 16px;
+            margin-top: 15px;
+            padding: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        .link-back {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .link-back:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            table td, table th {
+                font-size: 14px;
+                padding: 10px;
+            }
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, <%= customer.customerName %>!</h1>
+
+        <h2>Your Details:</h2>
+        <table>
+            <tr>
+                <th>Customer ID</th>
+                <td><%= customer.customerId %></td>
+            </tr>
+            <tr>
+                <th>Associate Name</th>
+                <td><%= customer.associateName %></td>
+            </tr>
+            <tr>
+                <th>Associate ID</th>
+                <td><%= customer.associateId ? customer.associateId : 'Not Provided' %></td> <!-- Correctly displaying associateId -->
+            </tr>
+            <tr>
+                <th>Plan</th>
+                <td><%= customer.plan ? customer.plan : 'Not Provided' %></td>
+            </tr>
+            <tr>
+                <th>Deposit Date</th>
+                <td><%= customer.depositDate ? new Date(customer.depositDate).toDateString() : 'Not Provided' %></td>
+            </tr>
+            <tr>
+                <th>Deposit Amount</th>
+                <td>₹<%= customer.depositAmount ? customer.depositAmount : 0 %></td>
+            </tr>
+            <tr>
+                <th>UTR/IMPS Number</th>
+                <td><%= customer.utr || 'Not Provided' %></td>
+            </tr>
+            <tr>
+                <th>Bank Name</th>
+                <td><%= customer.bankName ? customer.bankName : 'Not Provided' %></td>
+            </tr>
+            <tr>
+                <th>Branch</th>
+                <td><%= customer.branch ? customer.branch : 'Not Provided' %></td>
+            </tr>
+            <tr>
+                <th>Account No.</th>
+                <td><%= customer.accountNumber ? customer.accountNumber : 'Not Provided' %></td>
+            </tr>
+            <tr>
+                <th>IFSC Code</th>
+                <td><%= customer.ifscCode ? customer.ifscCode : 'Not Provided' %></td>
+            </tr>
+        </table>
+
+        <h2>Payment Result</h2>
+        <p>Your INVESTMENT: ₹<%= customer.depositAmount ? customer.depositAmount : 0 %></p>
+        <p>Payment Credit TO you this month: ₹<%= customer.depositAmount ? (customer.depositAmount / 20).toFixed(2) : 0 %></p> <!-- Assuming return is 1/20 -->
+        <p>Return Month: 1/20</p>
+        <p>Left Amount to be Paid: ₹<%= customer.depositAmount ? customer.depositAmount : 0 %></p>
+
+        <a href="/" class="link-back">Back to Home</a>
+        <a href="/logout" class="link-back">Logout</a>
+    </div>
+</body>
+</html>
