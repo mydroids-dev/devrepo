@@ -138,14 +138,17 @@
                         <li class="list-group-item template" data-template="Dear {{name}}, we apologize for the delay in processing your investment. We are working to resolve it.">Delay in Processing</li>
                         <li class="list-group-item template" data-template="Dear {{name}}, your payment has been received successfully. Thank you for your investment.">Payment Confirmation</li>
                         <li class="list-group-item template" data-template="Dear {{name}}, you have incurred a penalty due to wrong details/missing documents. Please correct them.">Penalty Notice</li>
-                        <li class="list-group-item" data-toggle="collapse" data-target="#customSms">Custom SMS</li>
-                        <div class="collapse" id="customSms">
-                            <textarea class="form-control" id="customMessage" rows="3" placeholder="Enter your custom message here..."></textarea>
-                        </div>
+                        <li class="list-group-item" data-toggle="collapse" data-target="#customSms" aria-expanded="false" aria-controls="customSms">Custom SMS</li>
                     </ul>
+                    <div class="collapse" id="customSms">
+                        <div class="card card-body">
+                            <textarea class="form-control" rows="3" id="customMessage" placeholder="Enter your custom SMS here..."></textarea>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send</button>
                 </div>
             </div>
         </div>
@@ -160,9 +163,12 @@
             var customerMobile = button.data('customer-mobile');
 
             var modal = $(this);
-            modal.find('.list-group-item.template').on('click', function() {
-                var template = $(this).data('template').replace("{{name}}", encodeURIComponent(customerName));
-                var finalMessage = template + " Regards, Royal Infra Market.";
+            // Set default value for custom message
+            modal.find('#customMessage').val(`Hello dear ${decodeURIComponent(customerName)}, `); // Set default greeting
+
+            modal.find('.list-group-item.template').off('click').on('click', function () {
+                var template = $(this).data('template').replace("{{name}}", decodeURIComponent(customerName));
+                var finalMessage = template + "\n\nRegards,\nRoyal Infra Market."; // Include desired format for regards
                 var whatsappLink = "https://wa.me/+91" + customerMobile + "?text=" + encodeURIComponent(finalMessage);
                 
                 window.open(whatsappLink, '_blank');
@@ -174,10 +180,10 @@
                 modal.find('.list-group-item.template').removeClass('active');
             });
 
-            modal.find('.modal-footer').off('click', 'button').on('click', '.btn-secondary', function () {
+            modal.find('.modal-footer > .btn-primary').off('click').on('click', function () {
                 var customMessage = modal.find('#customMessage').val();
                 if (customMessage) {
-                    var finalCustomMessage = customMessage + " Regards, Royal Infra Market.";
+                    var finalCustomMessage = customMessage + "\n\nRegards,\nRoyal Infra Market."; // Include desired format for regards
                     var whatsappLink = "https://wa.me/+91" + customerMobile + "?text=" + encodeURIComponent(finalCustomMessage);
                     window.open(whatsappLink, '_blank');
                     modal.modal('hide');
