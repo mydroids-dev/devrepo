@@ -581,7 +581,7 @@ app.get('/admin', adminAuth, async (req, res) => { // Protect this route
 });
 
 // Customers List Route
-app.get('/admin/customers', adminAuth, async (req, res) => { // Protect this route
+app.get('/admin/customers', async (req, res) => { // Removed adminAuth middleware
     const customers = await Customer.find();
     res.render('customers', { customers });
 });
