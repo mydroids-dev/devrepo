@@ -587,7 +587,7 @@ app.get('/admin/customers', adminAuth, async (req, res) => { // Protect this rou
 });
 
 // Investments List Route
-app.get('/admin/investments', adminAuth, async (req, res) => { // Protect this route
+app.get('/admin/investments', async (req, res) => { // Removed adminAuth middleware
     let investments = await Customer.aggregate([
         { $unwind: '$investments' },
         {
@@ -604,7 +604,7 @@ app.get('/admin/investments', adminAuth, async (req, res) => { // Protect this r
 });
 
 // View All Associates Route
-app.get('/admin/associates', adminAuth, async (req, res) => { // Protect this route
+app.get('/admin/associates', async (req, res) => { // Removed adminAuth middleware
     try {
         const associates = await Associate.find();
         res.render('associates-list', { associates });
