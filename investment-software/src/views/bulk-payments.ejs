@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Payments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Upload Bulk Payments</h1>
+        <form action="/admin/bulk-payments" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="bulkFile">Select File (Excel):</label>
+                <input type="file" class="form-control" name="bulkFile" id="bulkFile" accept=".xlsx, .xls" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        <% if (message) { %>
+            <div class="alert alert-info" role="alert">
+                <%= message %>
+            </div>
+        <% } %>
+
+        <h2 class="mt-4">Required Format</h2>
+        <p>Please ensure your Excel file contains the following columns:</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>CUSTOMER NAME</th>
+                    <th>CUSTOMER ID</th>
+                    <th>BANK NAME</th>
+                    <th>BRANCH</th>
+                    <th>ACCOUNT NUMBER</th>
+                    <th>IFSC CODE</th>
+                    <th>AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>CUST001</td>
+                    <td>ABC Bank</td>
+                    <td>Main Branch</td>
+                    <td>123456789012</td>
+                    <td>ABCD0123456</td>
+                    <td>5000</td>
+                </tr>
+                <tr>
+                    <td>Jane Smith</td>
+                    <td>CUST002</td>
+                    <td>XYZ Bank</td>
+                    <td>East Branch</td>
+                    <td>987654321098</td>
+                    <td>XYZZ0987654</td>
+                    <td>7000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>You can download a sample template <a href="/downloads/sample-template.xlsx" download>here</a>.</p>
+    </div>
+
+    <footer>
+        &copy; <span id="year"></span> Your Company. All Rights Reserved.
+    </footer>
+
+    <script>
+        // Set the current year in the footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

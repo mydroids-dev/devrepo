@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            background-color: #007bff;
+            padding-top: 20px;
+            color: white;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar img {
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+        .sidebar h2 {
+            font-size: 1.5em;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .sidebar a {
+            padding: 12px 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar a i {
+            margin-right: 10px;
+        }
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        nav a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: rgba(26, 188, 156, 0.6);
+        }
+
+        /* Main content styling */
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .investment-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            margin: 20px 0;
+            height: 400px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #35424a;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <img src="https://i.postimg.cc/C5W7FLMf/logo.png" alt="Logo" />
+        <h2 class="text-center">Royal Infra Market</h2>
+        <nav>
+            <a href="/investment-form"><i class="fas fa-user-plus"></i> Customer Register</a>
+                <a href="/admin/register-associate"><i class="fas fa-user-plus"></i> Associate Register</a>
+                <a href="/admin/customers"><i class="fas fa-list"></i> Customers List</a>
+                <a href="/admin/associates"><i class="fas fa-list"></i> Associate List</a>
+                <a href="/show-info"><i class="fas fa-file-alt"></i> Customer Booking Form</a>
+                <a href="/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <h1 class="mb-4">Welcome to the User Dashboard</h1>
+
+        <div class="alert alert-info">
+            <strong>Total Customers:</strong> <span id="totalCustomers">0</span> |
+            <strong>Active Customers:</strong> <span id="activeCustomers">0</span> |
+            <strong>Total Investment:</strong> ₹<span id="totalInvestment">0</span>
+        </div>
+
+        <div class="investment-details">
+            <h2>Investment Overview</h2>
+            <p>Total Investments: ₹<span id="totalInvestments">0</span></p>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="investmentChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="customerChart"></canvas>
+        </div>
+    </div>
+
+    <footer>
+        © <script>document.write(new Date().getFullYear())</script> Royal Infra Market. All rights reserved.
+    </footer>
+
+    <script>
+        async function fetchDashboardData() {
+            const response = await fetch('/api/dashboard-data');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.json();
+        }
+
+        fetchDashboardData()
+            .then(data => {
+                // Populate total customers, active customers, and total investment
+                document.getElementById('totalCustomers').innerText = data.totalCustomers;
+                document.getElementById('activeCustomers').innerText = data.activeCustomers;
+                document.getElementById('totalInvestment').innerText = data.totalInvestment;
+                document.getElementById('totalInvestments').innerText = data.totalInvestment;  // Assuming total investments equals total investment for simplicity
+
+                // Prepare investment chart data
+                const investmentData = {
+                    labels: data.investmentData.labels,
+                    datasets: [{
+                        label: 'Investments',
+                        data: data.investmentData.data,
+                        backgroundColor: 'rgba(46, 204, 113, 0.6)',
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                const ctxInvestment = document.getElementById('investmentChart').getContext('2d');
+                new Chart(ctxInvestment, {
+                    type: 'bar',
+                    data: investmentData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Amount (₹)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Months'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Example customer chart data (This can be adjusted to show real customer data)
+                const customerData = {
+                    labels: ['New', 'Returning'],
+                    datasets: [{
+                        label: 'Customers',
+                        data: [10, 30], // You may want to calculate this from your data as well
+                        backgroundColor: ['rgba(241, 196, 15, 0.6)', 'rgba(52, 152, 219, 0.6)'],
+                        borderColor: ['rgba(241, 196, 15, 1)', 'rgba(52, 152, 219, 1)'],
+                        borderWidth: 1
+                    }]
+                };
+
+                const ctxCustomer = document.getElementById('customerChart').getContext('2d');
+                new Chart(ctxCustomer, {
+                    type: 'doughnut',
+                    data: customerData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (tooltipItem) => {
+                                        return tooltipItem.label + ': ' + tooltipItem.raw;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Failed to fetch dashboard data:', error));
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

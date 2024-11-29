@@ -1,0 +1,150 @@
+<!-- show all payments list here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Additional styling for the modal */
+       
+        /* You can customize the chat widget position using CSS */
+        /* This targets the Tawk.to iframe, adjust the values as needed. */
+        .tawk-widget {
+            bottom: 60px !important; /* Positioning from the bottom */
+            right: 30px !important;  /* Positioning from the right */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card border-light text-center">
+                    <div class="card-header bg-primary text-white">
+                        <h4>Login to Your Account</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="/login" method="POST">
+                            <div class="form-group">
+                                <label for="customerId">Customer ID:</label>
+                                <input type="text" class="form-control" id="customerId" name="customerId" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#otpModal">Forgot your password?</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for OTP Request -->
+    <div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-labelledby="otpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="otpModalLabel">Reset Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="otpForm">
+                        <div class="form-group">
+                            <label for="resetCustomerId">Customer ID:</label>
+                            <input type="text" class="form-control" id="resetCustomerId" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Request OTP</button>
+                    </form>
+                    <div id="otpResponse" class="mt-3"></div>
+                    <div id="otpVerification" style="display:none;">
+                        <div class="form-group">
+                            <label for="otp">Enter OTP:</label>
+                            <input type="text" class="form-control" id="otp" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password:</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <button id="verifyOtp" class="btn btn-success">Verify OTP & Reset Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('otpForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const customerId = document.getElementById('resetCustomerId').value;
+
+            fetch('/request-reset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ customerId })
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('otpResponse').innerText = 'OTP sent! Please check your email.';
+                    document.getElementById('otpVerification').style.display = 'block';
+                } else {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('otpResponse').innerText = 'Error requesting OTP.';
+            });
+        });
+
+        document.getElementById('verifyOtp').addEventListener('click', function() {
+            const customerId = document.getElementById('resetCustomerId').value;
+            const otp = document.getElementById('otp').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ customerId, otp, newPassword })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Password has been reset successfully.');
+                    $('#otpModal').modal('hide'); // Close the modal
+                } else {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error verifying OTP: ' + error.message);
+            });
+        });
+    </script>
+
+    <!-- Tawk.to Chatbot Script -->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/671b7fc42480f5b4f593b3c2/1ib1mm6iu';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!-- End of Tawk.to Script -->
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!-- views/show-info.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Customer ID</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background for a polished look */
+        }
+
+        .container {
+            max-width: 400px; /* Set a maximum width for the form */
+            margin: 100px auto; /* Center the form vertically and horizontally */
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            text-align: center; /* Center all text within the container */
+        }
+
+        .logo {
+            width: 80%; /* Logo width */
+            margin-bottom: 20px; /* Space below the logo */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="https://i.postimg.cc/C5W7FLMf/logo.png" alt="Royal Infra Market Logo" class="logo"> <!-- Add the logo -->
+        <h2>Enter Customer ID for Booking Form</h2> <!-- Updated headline -->
+        <form action="/redirect-customer" method="POST">
+            <div class="form-group">
+                <label for="customerId">Customer ID:</label>
+                <input type="text" class="form-control" id="customerId" name="customerId" placeholder="Enter your Customer ID" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

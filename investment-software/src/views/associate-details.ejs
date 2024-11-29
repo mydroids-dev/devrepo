@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Associate Details</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 8px;
+            margin-top: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        strong {
+            color: #007bff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .no-customers {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #007bff;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .downline-section,
+        .customers-section {
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            h1,
+            h2 {
+                font-size: 1.8em;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+    <script>
+        function toggleVisibility(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section.style.display === "none" || section.style.display === "") {
+                section.style.display = "block"; // Show the section
+            } else {
+                section.style.display = "none"; // Hide the section
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Hello, <%= associate.fullName %></h1>
+    </div>
+
+    <div class="container">
+        <div>
+            <h2>Associate Information</h2>
+            <p><strong>Associate ID:</strong> <%= associate.associateId %></p>
+            <p><strong>Email:</strong> <%= associate.email %></p>
+            <p><strong>Phone:</strong> <%= associate.mobileNumber %></p>
+            <p><strong>Old Associate:</strong> <%= associate.oldassociate %></p>
+            <p><strong>Address:</strong> <%= associate.address %>, <%= associate.city %>, <%= associate.state %> <%= associate.zipCode %></p>
+        </div>
+
+        <div>
+            <button class="btn" onclick="toggleVisibility('customersSection')">Toggle Linked Customers</button>
+            <div id="customersSection" class="customers-section">
+                <h2>Linked Customers</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Investments</th>
+                            <th>Investment Date</th>
+                            <th>Investment Plan</th>
+                            <th>Associate Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (customers && customers.length) { %>
+                            <% customers.forEach(customer => { %>
+                                <% customer.investments.forEach(investment => {
+                                    const commission = (investment.depositAmount * 0.005 * 20).toFixed(2); %>
+                                    <tr>
+                                        <td><%= customer.customerId %></td>
+                                        <td><%= customer.customerName %></td>
+                                        <td>₹<%= investment.depositAmount %></td>
+                                        <td>on <%= new Date(investment.depositDate).toLocaleDateString() %></td>
+                                        <td><%= customer.plan || 'Not Provided' %></td>
+                                        <td>₹<%= commission %></td>
+                                    </tr>
+                                <% }); %>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="6" class="no-customers">No customers linked to this associate.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <button class="btn" onclick="toggleVisibility('downlineSection')">Toggle Downline Associates</button>
+            <div id="downlineSection" class="downline-section">
+                <h2>Downline Associates</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Associate ID</th>
+                            <th>Associate Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (downlineAssociates && downlineAssociates.length) { %>
+                            <% downlineAssociates.forEach(downline => { %>
+                                <tr>
+                                    <td><%= downline.associateId %></td>
+                                    <td><%= downline.fullName %></td>
+                                    <td><%= downline.email %></td>
+                                    <td><%= downline.mobileNumber %></td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4" class="no-customers">No downline associates for this associate.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Royal Infra Market. All Rights Reserved.</p>
+    </div>
+
+</body>
+
+</html>

@@ -6,6 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const session = require('express-session');
 const XLSX = require('xlsx');
+const bcrypt = require('bcryptjs'); // Use bcryptjs for consistent hashing
 
 const app = express();
 
@@ -24,7 +25,6 @@ app.use(session({
 }));
 
 // MongoDB Connection
-// MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
@@ -35,9 +35,14 @@ const loginHistorySchema = new mongoose.Schema({
     userType: { type: String, required: true }, // 'customer' or 'associate'
     loginTime: { type: Date, default: Date.now }
 });
-
-// Mongoose Model for Login History
 const LoginHistory = mongoose.model('LoginHistory', loginHistorySchema);
+
+// Mongoose Schema for Admin
+const adminSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
+});
+const Admin = mongoose.model('Admin', adminSchema);
 
 // Mongoose Schema for Customer
 const customerSchema = new mongoose.Schema({
@@ -65,8 +70,6 @@ const customerSchema = new mongoose.Schema({
     lastPaymentDate: { type: Date },
     profilePhoto: { type: String }
 });
-
-// Mongoose Model for Customer
 const Customer = mongoose.model('Customer', customerSchema);
 
 // Mongoose Schema for Associate
@@ -97,8 +100,6 @@ const associateSchema = new mongoose.Schema({
     signature: String,
     image: String
 });
-
-// Mongoose Model for Associate
 const Associate = mongoose.model('Associate', associateSchema);
 
 // Generate Customer ID
@@ -130,6 +131,53 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+// Admin Registration Route
+app.get('/admin/register', (req, res) => {
+    res.render('admin-register', { message: null });
+});
+
+app.post('/admin/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const existingAdmin = await Admin.findOne({ username });
+        if (existingAdmin) {
+            return res.render('admin-register', { message: 'Username is already taken.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newAdmin = new Admin({ username, password: hashedPassword });
+        await newAdmin.save();
+
+        req.session.adminId = newAdmin._id;
+        res.redirect('/admin');
+    } catch (error) {
+        console.error(error);
+        return res.render('admin-register', { message: 'An error occurred during registration. Please try again.' });
+    }
+});
+
+// Admin Login Route
+app.get('/admin/login', (req, res) => {
+    res.render('admin-login', { message: null }); // Ensure the view exists
+});
+
+app.post('/admin/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const admin = await Admin.findOne({ username });
+        if (!admin || !await bcrypt.compare(password, admin.password)) {
+            return res.render('admin-login', { message: 'Admin not found or incorrect password.' });
+        }
+
+        req.session.adminId = admin._id;
+        res.redirect('/admin');
+    } catch (error) {
+        console.error(error);
+        return res.render('admin-login', { message: 'Server error. Please try again later.' });
+    }
+});
+
 // --------------------------------------------------------------
 app.get('/services', (req, res) => {
     res.render('services');
@@ -152,7 +200,7 @@ app.get('/investment-form', (req, res) => {
 
 // --------------------------------------------------------------
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('customer-login', { message: null }); // Ensure the view exists
 });
 
 // Handle Customer Login
@@ -225,7 +273,6 @@ app.get('/associate/:id', async (req, res) => {
         if (!associate) {
             return res.status(404).send("Associate not found.");
         }
-        // Fetch any additional data needed here, e.g., customers linked to this associate
         const customers = await Customer.find({ associateId });
         res.render('associate-details', { associate, customers });
     } catch (error) {
@@ -295,6 +342,11 @@ app.post('/submit', async (req, res) => {
     res.redirect(`/slip/${customer.customerId}`);
 });
 
+// Render customer registration page
+app.get('/register', (req, res) => {
+    res.render('customer-register', { message: null });
+});
+
 // Slip Route
 // --------------------------------------------------------------
 app.get('/slip/:id', async (req, res) => {
@@ -325,6 +377,9 @@ app.get('/view-investment', async (req, res) => {
 // Admin Route
 // --------------------------------------------------------------
 app.get('/admin', async (req, res) => {
+    if (!req.session.adminId) {
+        return res.redirect('/admin/login');
+    }
     try {
         const customers = await Customer.find();
         const totalCustomers = customers.length;
@@ -555,7 +610,7 @@ app.post('/admin/update', async (req, res) => {
 // Register New Associate Route
 // --------------------------------------------------------------
 app.get('/admin/register-associate', (req, res) => {
-    res.render('associate-registration'); // Render the associate registration EJS file
+    res.render('associate-registration');
 });
 
 // Handle Associate Registration
@@ -689,7 +744,7 @@ app.get('/admin/export', async (req, res) => {
 app.get('/admin/login-history', async (req, res) => {
     try {
         const logins = await LoginHistory.find().sort({ loginTime: -1 });
-        res.render('login-history', { logins }); // Pass 'logins' to EJS
+        res.render('login-history', { logins });
     } catch (error) {
         console.error("Error fetching login history:", error);
         res.status(500).send("Internal Server Error");
