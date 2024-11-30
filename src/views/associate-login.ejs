@@ -31,6 +31,7 @@
 
         .logo {
             width: 80%; /* Logo width */
+            max-width: 150px; /* Ensure the logo does not exceed this width */
             margin-bottom: 20px; /* Space below the logo */
         }
     </style>
@@ -38,7 +39,7 @@
 
 <body>
     <div class="login-container">
-        <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" />
+        <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" class="logo" />
         <h1>Associate Login</h1>
         <form action="/associate/login" method="POST">
             <div class="form-group">
