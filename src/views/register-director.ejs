@@ -78,16 +78,28 @@
     <div class="container">
         <img src="https://i.postimg.cc/C5W7FLMf/logo.png" alt="Royal Infra Market Logo" style="max-width: 100%; height: auto; margin-bottom: 20px;">
         <h1>Register User</h1>
-        <form action="/admin/newdir-ragi-now" method="POST">
+        <form action="/admin/newdir-ragi-now" method="POST" id="registerForm">
             <label for="fullName">Full Name:</label>
-            <input type="text" id="fullName" name="fullName" required>
+            <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
             
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" required placeholder="Enter your password" minlength="8">
 
             <button type="submit">Register</button>
         </form>
         <p class="footer">Already have an account? <a href="/admin/dlogin">Login here</a></p>
     </div>
+    
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            const password = document.getElementById('password').value;
+
+            // Basic password validation (you can extend this)
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long.');
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    </script>
 </body>
 </html>
