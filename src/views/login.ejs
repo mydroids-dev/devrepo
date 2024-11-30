@@ -1,6 +1,7 @@
 <!-- show all payments list here -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,16 +11,24 @@
         /* Additional styling for the modal */
         .tawk-widget {
             bottom: 60px !important; /* Positioning from the bottom */
-            right: 30px !important;  /* Positioning from the right */
+            right: 30px !important; /* Positioning from the right */
+        }
+
+        /* Logo styles */
+        .logo {
+            width: 100px; /* Set a specific width for the logo */
+            margin-bottom: 20px; /* Add space below the logo */
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <div class="card border-light text-center">
                     <div class="card-header bg-primary text-white">
+                        <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" class="logo" />
                         <h4>Login to Your Account</h4>
                     </div>
                     <div class="card-body">
@@ -83,7 +92,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
         // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
             const customerId = document.getElementById('customerId').value;
             if (!customerId) {
                 event.preventDefault(); // Prevent form submission
@@ -92,7 +101,7 @@
         });
 
         // OTP request form submission
-        document.getElementById('otpForm').addEventListener('submit', function(event) {
+        document.getElementById('otpForm').addEventListener('submit', function (event) {
             event.preventDefault();
             const customerId = document.getElementById('resetCustomerId').value;
             if (!customerId) {
@@ -122,7 +131,7 @@
         });
 
         // OTP verification
-        document.getElementById('verifyOtp').addEventListener('click', function() {
+        document.getElementById('verifyOtp').addEventListener('click', function () {
             const customerId = document.getElementById('resetCustomerId').value;
             const otp = document.getElementById('otp').value;
             const newPassword = document.getElementById('newPassword').value;
@@ -157,14 +166,14 @@
 
     <!-- Tawk.to Chatbot Script -->
     <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/671b7fc42480f5b4f593b3c2/1ib1mm6iu';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/671b7fc42480f5b4f593b3c2/1ib1mm6iu';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
         })();
     </script>
     <!-- End of Tawk.to Script -->
