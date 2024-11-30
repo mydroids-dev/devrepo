@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +18,7 @@
             margin: 0;
             padding: 20px; /* Adding some padding for small screens */
         }
+
         .container {
             background: #fff;
             padding: 20px;
@@ -26,16 +28,20 @@
             max-width: 400px;
             text-align: center;
         }
+
         h1 {
             margin-bottom: 20px;
             font-size: 24px; /* Improved heading size */
         }
+
         label {
             display: block;
             margin: 10px 0 5px;
             text-align: left; /* Better alignment for labels */
         }
-        input[type="text"], input[type="password"] {
+
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -43,6 +49,7 @@
             border-radius: 4px;
             box-sizing: border-box; /* Ensuring padding is included in width */
         }
+
         button {
             background-color: #007BFF;
             color: white;
@@ -53,31 +60,45 @@
             width: 100%;
             font-size: 16px; /* Improved button size */
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .footer {
             margin-top: 20px; /* Added margin for footer separation */
         }
+
         .error {
             color: red;
             margin-top: 10px;
             font-size: 14px; /* Slightly smaller font size for error messages */
         }
+
         .footer a {
             color: #007BFF; /* Ensuring link color matches branding */
             text-decoration: none; /* Removing underline */
         }
+
         .footer a:hover {
             text-decoration: underline; /* Underline on hover for visibility */
         }
+
+        /* Logo styles */
+        .logo {
+            max-width: 100%; 
+            height: auto; 
+            margin-bottom: 20px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <img src="https://i.postimg.cc/C5W7FLMf/logo.png" alt="Royal Infra Market Logo" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+        <!-- Updated logo with the new URL -->
+        <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" class="logo" />
         <h1>Login User</h1>
-        
+
         <!-- Add error message display handling -->
         <div id="error-message" class="error" style="display: none;"></div>
 
@@ -90,6 +111,7 @@
 
             <button type="submit">Login</button>
         </form>
+
         <div class="footer">
             <p>Already have an account? Please login above.</p>
             <p><a href="/contact">Contact the admin.</a></p>
@@ -114,4 +136,5 @@
         });
     </script>
 </body>
+
 </html>
