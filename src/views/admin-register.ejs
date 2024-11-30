@@ -100,12 +100,18 @@
         .register-link a:hover {
             text-decoration: underline;
         }
+
+        /* Logo styles */
+        .logo {
+            width: 100px; /* Set a specific width */
+            margin-bottom: 20px; /* Add space below the logo */
+        }
     </style>
 </head>
 
 <body>
     <div class="register-container">
-        <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" />
+        <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" class="logo" />
         <h1>Admin Registration</h1>
         <% if (message) { %>
             <div class="alert alert-danger"><%= message %></div>
