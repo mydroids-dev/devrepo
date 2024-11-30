@@ -10,9 +10,6 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Ensure body takes at least full viewport height */
         }
         .sidebar {
             height: 100%;
@@ -29,6 +26,7 @@
             width: 100%;
             height: auto;
             padding: 10px;
+            display: block;
             margin: 0 auto;
         }
         .sidebar h2 {
@@ -54,7 +52,6 @@
         .main-content {
             margin-left: 260px;
             padding: 20px;
-            flex-grow: 1; /* This allows the main-content to take the remaining height */
         }
         .header {
             background-color: #007bff;
@@ -80,7 +77,9 @@
             padding: 15px;
             background-color: #007bff;
             color: white;
-            margin-top: auto; /* This ensures footer stays at the bottom */
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
         .form-control {
             margin-bottom: 10px;
@@ -95,8 +94,8 @@
 </head>
 <body>
 
-<div class="sidebar" id="sidebar">
-        <img src="https://github.com/mydroids-dev/devrepo/blob/main/public/logo.svg" alt="Logo" />
+<div class="sidebar">
+    <img src="https://github.com/mydroids-dev/devrepo/blob/main/public/logo.svg" alt="Logo" />
     <h2>Royal Infra Market</h2>
     <a href="/admin/"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
     <a href="/admin/customers"><i class="fas fa-users"></i> Customers</a>
@@ -173,7 +172,7 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editModalLabel<%= customer.customerId %>">Edit Customer Details</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
+                                        <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
