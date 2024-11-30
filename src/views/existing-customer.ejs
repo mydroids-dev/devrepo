@@ -5,9 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Existing Customer</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Basic reset and body styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .logo {
+            width: 100px; /* Set a specific width for the logo */
+            margin-bottom: 20px; /* Add space below the logo */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
+        <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" class="logo" />
         <h1>Existing Customer Found</h1>
         <p><strong>Customer ID:</strong> <%= existingCustomer.customerId %></p>
         <p>Please enter your old customer ID to view your investments or submit a new investment under this ID.</p>
