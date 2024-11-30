@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         /* Additional styling for the modal */
-       
-        /* You can customize the chat widget position using CSS */
-        /* This targets the Tawk.to iframe, adjust the values as needed. */
         .tawk-widget {
             bottom: 60px !important; /* Positioning from the bottom */
             right: 30px !important;  /* Positioning from the right */
@@ -26,10 +23,11 @@
                         <h4>Login to Your Account</h4>
                     </div>
                     <div class="card-body">
-                        <form action="/login" method="POST">
+                        <form action="/login" method="POST" id="loginForm">
                             <div class="form-group">
                                 <label for="customerId">Customer ID:</label>
-                                <input type="text" class="form-control" id="customerId" name="customerId" required>
+                                <input type="text" class="form-control" id="customerId" name="customerId" required aria-required="true">
+                                <div class="invalid-feedback" id="customerIdError" style="display: none;">Please enter your Customer ID.</div>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Login</button>
                         </form>
@@ -56,7 +54,8 @@
                     <form id="otpForm">
                         <div class="form-group">
                             <label for="resetCustomerId">Customer ID:</label>
-                            <input type="text" class="form-control" id="resetCustomerId" required>
+                            <input type="text" class="form-control" id="resetCustomerId" required aria-required="true">
+                            <div class="invalid-feedback" id="resetCustomerIdError" style="display: none;">Please enter your Customer ID.</div>
                         </div>
                         <button type="submit" class="btn btn-primary">Request OTP</button>
                     </form>
@@ -65,10 +64,12 @@
                         <div class="form-group">
                             <label for="otp">Enter OTP:</label>
                             <input type="text" class="form-control" id="otp" required>
+                            <div class="invalid-feedback" id="otpError" style="display: none;">Please enter the OTP.</div>
                         </div>
                         <div class="form-group">
                             <label for="newPassword">New Password:</label>
                             <input type="password" class="form-control" id="newPassword" required>
+                            <div class="invalid-feedback" id="newPasswordError" style="display: none;">Please enter a new password.</div>
                         </div>
                         <button id="verifyOtp" class="btn btn-success">Verify OTP & Reset Password</button>
                     </div>
@@ -81,9 +82,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            const customerId = document.getElementById('customerId').value;
+            if (!customerId) {
+                event.preventDefault(); // Prevent form submission
+                document.getElementById('customerIdError').style.display = 'block';
+            }
+        });
+
+        // OTP request form submission
         document.getElementById('otpForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const customerId = document.getElementById('resetCustomerId').value;
+            if (!customerId) {
+                document.getElementById('resetCustomerIdError').style.display = 'block';
+                return;
+            }
 
             fetch('/request-reset', {
                 method: 'POST',
@@ -106,10 +121,17 @@
             });
         });
 
+        // OTP verification
         document.getElementById('verifyOtp').addEventListener('click', function() {
             const customerId = document.getElementById('resetCustomerId').value;
             const otp = document.getElementById('otp').value;
             const newPassword = document.getElementById('newPassword').value;
+
+            if (!otp || !newPassword) {
+                if (!otp) document.getElementById('otpError').style.display = 'block';
+                if (!newPassword) document.getElementById('newPasswordError').style.display = 'block';
+                return;
+            }
 
             fetch('/verify-otp', {
                 method: 'POST',
