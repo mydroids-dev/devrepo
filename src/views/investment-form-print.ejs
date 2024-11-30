@@ -35,13 +35,11 @@
         }
         .form-section {
             margin-top: 20px;
-            border-top: 2px solid #007bff; 
+            border-top: 2px solid #007bff;
             padding-top: 20px;
         }
         .form-label {
             font-weight: bold;
-        }
-        .form-label {
             background-color: #f8f9fa;
             border: 1px solid #ced4da;
             border-radius: 4px;
@@ -77,8 +75,21 @@
             padding: 8px 10px;
             border: 1px solid #ced4da;
         }
-        .table-striped td {
+        .table-striped tr:nth-child(even) td {
             background-color: #f8f9fa;
+        }
+        
+        /* Print styles */
+        @media print {
+            .btn-print {
+                display: none; /* Hide the print button when printing */
+            }
+            table {
+                border: none; /* Remove borders for a cleaner print */
+            }
+            td {
+                border: 1px solid #000; /* Darker border for print */
+            }
         }
     </style>
     <script>
@@ -89,7 +100,7 @@
 </head>
 <body>
     <div class="container">
-   <img src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Logo" />
+        <img class="logo" src="https://raw.githubusercontent.com/mydroids-dev/devrepo/main/public/logo.svg" alt="Royal Infra Market Logo" />
         <h1>Investment Slip</h1>
         
         <div class="form-section">
