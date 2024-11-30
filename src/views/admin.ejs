@@ -63,7 +63,8 @@
         .alert {
             border-radius: 5px;
         }
-        .table th, .table td {
+        .table th,
+        .table td {
             vertical-align: middle;
         }
         .modal-header {
@@ -90,6 +91,13 @@
         .btn:hover {
             transform: scale(1.05);
         }
+
+        /* Media query to hide logout on PC */
+        @media (min-width: 992px) { /* Adjust based on your breakpoint for PC */
+            .sidebar a.logout {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -109,7 +117,7 @@
     <a href="/admin/bulk-payment-history"><i class="fas fa-history"></i> Bulk Payment History</a>
     <a href="/admin/login-history"><i class="fas fa-history"></i> Login History</a>
     <a href="/downline-tree"><i class="fas fa-users"></i> Downline Tree</a>    
-    <a href="/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <a href="/admin/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <div class="main-content">
