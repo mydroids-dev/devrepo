@@ -12,6 +12,7 @@
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             color: #333;
+            margin: 0;
         }
 
         /* Sidebar styling */
@@ -26,18 +27,20 @@
             color: white;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
+
         .sidebar img {
             width: 100%;
             height: auto;
             padding: 10px;
-            display: block;
             margin: 0 auto;
         }
+
         .sidebar h2 {
             font-size: 1.5em;
             text-align: center;
             margin: 10px 0;
         }
+
         .sidebar a {
             padding: 12px 15px;
             text-decoration: none;
@@ -47,24 +50,13 @@
             align-items: center;
             transition: background-color 0.3s ease;
         }
+
         .sidebar a i {
             margin-right: 10px;
         }
+
         .sidebar a:hover {
             background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        nav a {
-            padding: 15px 20px;
-            text-decoration: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s;
-        }
-
-        nav a:hover {
-            background-color: rgba(26, 188, 156, 0.6);
         }
 
         /* Main content styling */
@@ -92,27 +84,54 @@
             padding: 20px 0;
             background-color: #35424a;
             color: white;
-            position: fixed;
+            position: relative; /* Changed to relative positioning */
             bottom: 0;
             width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                width: 100%;
+                height: auto;
+                display: none; /* Hide sidebar on small screens */
+            }
+            .sidebar.active {
+                display: block; /* Show sidebar when active */
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* Toggle button */
+        #sidebarToggle {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 1; /* Ensure it is above the sidebar */
+            color: #007bff;
+            font-size: 1.5em;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <img src="https://i.postimg.cc/C5W7FLMf/logo.png" alt="Logo" />
         <h2 class="text-center">Royal Infra Market</h2>
         <nav>
             <a href="/investment-form"><i class="fas fa-user-plus"></i> Customer Register</a>
-                <a href="/admin/register-associate"><i class="fas fa-user-plus"></i> Associate Register</a>
-                <a href="/admin/customers"><i class="fas fa-list"></i> Customers List</a>
-                <a href="/admin/associates"><i class="fas fa-list"></i> Associate List</a>
-                <a href="/show-info"><i class="fas fa-file-alt"></i> Customer Booking Form</a>
-                <a href="/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-
+            <a href="/admin/register-associate"><i class="fas fa-user-plus"></i> Associate Register</a>
+            <a href="/admin/customers"><i class="fas fa-list"></i> Customers List</a>
+            <a href="/admin/associates"><i class="fas fa-list"></i> Associate List</a>
+            <a href="/show-info"><i class="fas fa-file-alt"></i> Customer Booking Form</a>
+            <a href="/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </nav>
     </div>
+
+    <span id="sidebarToggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></span>
 
     <div class="main-content">
         <h1 class="mb-4">Welcome to the User Dashboard</h1>
@@ -152,13 +171,11 @@
 
         fetchDashboardData()
             .then(data => {
-                // Populate total customers, active customers, and total investment
                 document.getElementById('totalCustomers').innerText = data.totalCustomers;
                 document.getElementById('activeCustomers').innerText = data.activeCustomers;
                 document.getElementById('totalInvestment').innerText = data.totalInvestment;
-                document.getElementById('totalInvestments').innerText = data.totalInvestment;  // Assuming total investments equals total investment for simplicity
+                document.getElementById('totalInvestments').innerText = data.totalInvestment;
 
-                // Prepare investment chart data
                 const investmentData = {
                     labels: data.investmentData.labels,
                     datasets: [{
@@ -195,12 +212,11 @@
                     }
                 });
 
-                // Example customer chart data (This can be adjusted to show real customer data)
                 const customerData = {
                     labels: ['New', 'Returning'],
                     datasets: [{
                         label: 'Customers',
-                        data: [10, 30], // You may want to calculate this from your data as well
+                        data: [10, 30],
                         backgroundColor: ['rgba(241, 196, 15, 0.6)', 'rgba(52, 152, 219, 0.6)'],
                         borderColor: ['rgba(241, 196, 15, 1)', 'rgba(52, 152, 219, 1)'],
                         borderWidth: 1
@@ -230,6 +246,11 @@
                 });
             })
             .catch(error => console.error('Failed to fetch dashboard data:', error));
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
