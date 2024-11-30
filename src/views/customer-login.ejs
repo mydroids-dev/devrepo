@@ -25,6 +25,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 300px;
             text-align: center; /* Center text within the container */
+            position: relative; /* Allow absolute positioning of error message */
         }
 
         h1 {
@@ -36,6 +37,11 @@
             color: red;
             text-align: center;
             margin-bottom: 15px;
+            font-weight: bold;
+            position: absolute; /* Position it above the form */
+            top: 20px; /* Adjust as necessary */
+            left: 10px;
+            right: 10px;
         }
 
         label {
@@ -50,6 +56,12 @@
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            transition: border-color 0.3s; /* Add transition for focus effects */
+        }
+
+        input[type="text"]:focus {
+            border-color: #5cb85c; /* Change border color on focus */
+            outline: none; /* Remove outline */
         }
 
         button {
@@ -60,6 +72,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s; /* Add transition for hover effects */
         }
 
         button:hover {
@@ -78,6 +91,12 @@
         a:hover {
             text-decoration: underline;
         }
+
+        @media (max-width: 400px) {
+            .container {
+                width: 90%; /* Full width for mobile */
+            }
+        }
     </style>
 </head>
 
@@ -85,9 +104,11 @@
     <div class="container">
         <img src="https://i.postimg.cc/C5W7FLMf/logo.png" alt="Royal Infra Market Logo" style="width: 80%; margin-bottom: 20px;">
         <h1>Customer Login</h1>
+        
         <% if (message) { %>
-            <div class="error-message"><%= message %></div>
+            <div class="error-message" aria-live="assertive"><%= message %></div>
         <% } %>
+        
         <form action="/login" method="POST"> 
             <div>
                 <label for="customerId">Customer ID:</label>
